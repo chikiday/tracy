@@ -36,7 +36,7 @@
 		"classmap": ["src"],
 		"files": ["src/Tracy/functions.php"]
 	},
-	"minimum-stability": "dev",
+	"minimum-stability": "stable",
 	"scripts": {
 		"phpstan": "phpstan analyse",
 		"tester": "tester tests"
