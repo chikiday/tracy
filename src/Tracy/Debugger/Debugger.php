@@ -94,7 +94,7 @@ class Debugger
 	/** theme for dump() */
 	public static string $dumpTheme = 'light';
 
-	#[\Deprecated]
+//	#[\Deprecated]
 	public static $maxLen;
 
 	/********************* logging ****************d*g**/
