@@ -600,6 +600,10 @@ class Helpers
 
 	public static function traverseValue(mixed $val, callable $callback, array &$skip = [], ?string $refId = null): void
 	{
+		if (count($skip) > 500) {
+			return ;
+		}
+
 		if (is_object($val)) {
 			$id = spl_object_id($val);
 			if (!isset($skip[$id])) {

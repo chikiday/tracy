@@ -311,26 +311,12 @@ class Debugger
 	 */
 	public static function exceptionHandler(\Throwable $exception): void
 	{
-		$firstTime = (bool) self::$reserved;
 		self::$reserved = null;
-		self::$obStatus = ob_get_status(true);
-
-		if (!headers_sent()) {
-			http_response_code(isset($_SERVER['HTTP_USER_AGENT']) && str_contains($_SERVER['HTTP_USER_AGENT'], 'MSIE ') ? 503 : 500);
-		}
 
 		Helpers::improveException($exception);
 		static::removeOutputBuffers(true);
 
-		self::getStrategy()->handleException($exception, $firstTime);
-
-		try {
-			foreach ($firstTime ? self::$onFatalError : [] as $handler) {
-				$handler($exception);
-			}
-		} catch (\Throwable $e) {
-			self::tryLog($e, self::EXCEPTION);
-		}
+		throw $exception;
 	}
 
 
@@ -354,17 +340,7 @@ class Debugger
 			self::errorHandler($error['type'], $error['message'], $error['file'], $error['line']);
 		}
 
-		if ($severity === E_RECOVERABLE_ERROR || $severity === E_USER_ERROR) {
-			throw new ErrorException($message, 0, $severity, $file, $line);
-
-		} elseif (
-			($severity & error_reporting())
-			|| (is_int(self::$scream) ? $severity & self::$scream : self::$scream)
-		) {
-			self::getStrategy()->handleError($severity, $message, $file, $line);
-		}
-
-		return false; // calls normal error handler to fill-in error_get_last()
+		throw new ErrorException($message, 0, $severity, $file, $line);
 	}
 
 
