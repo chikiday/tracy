@@ -31,6 +31,7 @@ class FileSession implements SessionStorage
 	public function __construct(string $dir)
 	{
 		$this->dir = $dir;
+		$this->sessionId = $_COOKIE[$this->cookieName] ?? getmypid();
 	}
 
 
@@ -47,9 +48,6 @@ class FileSession implements SessionStorage
 	private function open(): void
 	{
 		$id = &$this->sessionId;
-		if (empty($id)) {
-			$id = ($_COOKIE[$this->cookieName] ?? "") . getmypid();
-		}
 		$file = @fopen($path = $this->dir . '/' . self::FilePrefix . $id, 'c+'); // intentionally @
 		if ($file === false) {
 			throw new \RuntimeException("Unable to create file '$path'. " . error_get_last()['message']);
