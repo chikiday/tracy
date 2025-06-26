@@ -31,7 +31,7 @@ class FileSession implements SessionStorage
 	public function __construct(string $dir)
 	{
 		$this->dir = $dir;
-		$this->sessionId = $_COOKIE[$this->cookieName] ?? getmypid();
+		$this->sessionId = (string) ($_COOKIE[$this->cookieName] ?? getmypid());
 	}
 
 
